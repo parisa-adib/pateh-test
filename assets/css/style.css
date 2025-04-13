@@ -1,0 +1,45 @@
+@font-face {
+    font-family: Estedad;
+    src: url("../fonts/Estedad-Regular.woff2");
+    src: url("../fonts/Estedad-Regular.ttf");
+
+}
+@font-face {
+    font-family: EstedadBold;
+    src: url("../fonts/Estedad-Bold.woff2");
+    src: url("../fonts/Estedad-Bold.ttf");
+
+}
+body,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+address,
+strong,
+b,
+u,
+i,
+ul,
+li,
+input {
+  font-family: "Estedad";
+  letter-spacing: 0;
+}
+body {
+    background-color: #fff;
+    direction: rtl !important;
+}
+
+.vpd-icon-btn{
+    border-radius: 0 5px 5px 0;
+}
+.vpd-input-group input {
+    border-radius: 5px 0 0 5px;
+
+}
