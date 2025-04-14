@@ -10,7 +10,7 @@
 				class="text-blue-600 hover:text-blue-800"
 				aria-label="ورود"
 			>
-				<Icon icon="mdi:login" class="text-blue-500 text-lg"/>
+				<Icon icon="mdi:login" class="text-blue-500 text-lg" />
 			</button>
 			<button
 				v-else
@@ -18,13 +18,13 @@
 				class="text-red-600 hover:text-red-800"
 				aria-label="خروج"
 			>
-			<Icon icon="mdi:logout" class="text-red-500 text-lg"/>
+				<Icon icon="mdi:logout" class="text-red-500 text-lg" />
 			</button>
 		</div>
 
 		<!-- پاپ‌آپ ورود -->
 		<div v-if="showLoginModal" class="z-[11111]">
-			<LoginModal @Close="showLoginModal = false" />
+			<LoginModal @close="showLoginModal = false" />
 		</div>
 	</nav>
 </template>
@@ -33,8 +33,7 @@
 import {ref} from "vue";
 import {useAuthStore} from "~/stores/auth";
 import LoginModal from "~/components/common/main/LoginModal.vue";
-import { Icon } from "@iconify/vue";
-
+import {Icon} from "@iconify/vue";
 
 const authStore = useAuthStore();
 const showLoginModal = ref(false);

@@ -1,73 +1,103 @@
+<script setup>
+import {ref} from "vue";
+import VOtpInput from "vue3-otp-input";
+import {useAuthStore} from "~/stores/auth";
+import axios from "axios";
+import {Icon} from "@iconify/vue";
+
+const emit = defineEmits("close");
+const visible = ref(true);
+const mobile = ref("");
+const otp = ref("");
+const showOtp = ref(false);
+const authStore = useAuthStore();
+const loading = ref(false);
+
+const sendMobile = async () => {
+	loading.value = true;
+	const {data, error} = await useFetch("/api/auth/login", {
+		method: "POST",
+		body: {mobile: mobile.value},
+	});
+	if (error.value) {
+		// مدیریت خطا
+		loading.value = false;
+
+		return;
+	}
+
+	if (data.value.success) {
+		showOtp.value = true;
+		loading.value = false;
+	}
+};
+
+const verifyOtp = async () => {
+	loading.value = true;
+	const response = await axios.post(
+		"https://api.pateh.com/ath/auth/validate-otp",
+		{mobile: mobile.value, otp: Number(otp.value)}
+	);
+
+	authStore.setToken(response.data.data.token);
+	authStore.setMobile(response.data.data.mobile);
+	authStore.setIsAuth;
+	loading.value = false;
+	closeModal();
+};
+
+const closeModal = () => {
+	visible.value = false;
+	emit("close");
+};
+</script>
 <template>
 	<div
 		v-if="visible"
 		class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-		ref="modalRef"
 	>
-		<div class="bg-white p-6 rounded shadow">
-			<h2 class="text-xl mb-4 text-center">ورود</h2>
-			<label class="text-sm text-[#474747]">شماره موبایل خود را وارد کنید</label>
-			<input
-				v-model="mobile"
-				type="text"
-				placeholder="شماره موبایل"
-				class="border border-[#474747] rounded p-2 w-full my-4"
-			/>
-			<div class="grid grid-cols-2 gap-4">
-				<button class="bg-slate-300 text-white px-4 py-2 rounded">
-		      انصراف          
+		<div class="bg-white p-6 rounded shadow w-80 relative">
+			<button
+				@click="closeModal"
+				class="absolute top-4 left-4 text-gray-600 hover:text-gray-900"
+			>
+				<Icon icon="mdi:close" class="text-blue-500" />
 			</button>
-			<button @click="login" class="bg-blue-500 text-white px-4 py-2 rounded">
-				<i v-if="loading" class="pi pi-spin pi-spinner ml-1"></i>
-            	<span v-if="!loading">ورود</span>
-            	<span v-else class="text-xs">صبر کنید...</span>
-			</button>
-		</div>
+			<h2 class="text-xl mb-4">ورود</h2>
+			<div v-if="showOtp == false">
+				<input
+					v-model="mobile"
+					type="text"
+					placeholder="شماره موبایل"
+					class="border p-2 w-full mb-4"
+				/>
+				<button
+					@click="sendMobile"
+					class="bg-blue-500 text-white px-4 py-2 rounded w-full"
+				>
+					ارسال کد تایید
+				</button>
+			</div>
+			<div v-else class="otp-box mx-auto mt-3">
+				<v-otp-input
+					v-model:value="otp"
+					input-classes="otp-input"
+					:is-disabled="loading"
+					:num-inputs="6"
+					separator="-"
+					:should-auto-focus="true"
+					input-type="letter-numeric"
+					:conditionalClass="['one', 'two', 'three', 'four', 'five', 'six']"
+					:placeholder="['', '', '', '', '', '']"
+					@onComplete="verifyOtp()"
+				/>
+				<button
+					@click="verifyOtp"
+					class="bg-[#EB6F24] text-white px-4 py-2 rounded w-full mt-3"
+				>
+					تایید کد
+				</button>
+			</div>
 		</div>
 	</div>
 </template>
-
-<script setup>
-import {ref} from "vue";
-import {useAuthStore} from "~/stores/auth";
-
-const visible = ref(true);
-const mobile = ref("");
-const authStore = useAuthStore();
-const modalRef = ref(null);
-const loading = ref(false)
-const login = async () => {
-loading.value = true;
-	try {
-		const response = await fetch(
-			"https://api.pateh.com/ath/auth/login-or-register",
-			{
-				method: "POST",
-				headers: {"Content-Type": "application/json"},
-				body: JSON.stringify({mobile: mobile.value}),
-			}
-		);
-		const data = await response.json();
-		authStore.setToken(data.token);
-		authStore.setUser(data.user);
-		visible.value = false;
-	} catch (error) {
-		console.error("خطا در ورود:", error);
-	}
-};
-
-const handleClickOutside = (event) => {
-	if (modalRef.value && !modalRef.value.contains(event.target)) {
-		emit("close");
-	}
-};
-
-
-onMounted(() => {
-	document.addEventListener("click", handleClickOutside);
-});
-
-onBeforeUnmount(() => {
-	document.removeEventListener("click", handleClickOutside);
-});
-</script>
