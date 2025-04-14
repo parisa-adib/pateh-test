@@ -1,14 +1,16 @@
 <script setup>
 /**
- * Index page for search tickets 
+ * Index page for search tickets
  */
 
-import SearchTickets from "@/components/common/main/SearchTickets.vue"
+import FlightSearchForm from "~/components/common/main/FlightSearchForm.vue";
+import Navbar from "~/components/global/Navbar.vue";
 </script>
 <template>
-<div class="container mx-auto relative top-5">
-   <div>
-    <SearchTickets />
-   </div>
-</div>
+	<div>
+		<Navbar />
+		<div class="max-w-md mx-auto mt-10">
+			<FlightSearchForm />
+		</div>
+	</div>
 </template>

@@ -1,0 +1,62 @@
+<template>
+	<div
+		v-if="visible"
+		class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+		ref="modalRef"
+	>
+		<div class="bg-white p-6 rounded shadow">
+			<h2 class="text-xl mb-4">ورود</h2>
+			<input
+				v-model="mobile"
+				type="text"
+				placeholder="شماره موبایل"
+				class="border p-2 w-full mb-4"
+			/>
+			<button @click="login" class="bg-blue-500 text-white px-4 py-2 rounded">
+				ورود
+			</button>
+		</div>
+	</div>
+</template>
+
+<script setup>
+import {ref} from "vue";
+import {useAuthStore} from "~/stores/auth";
+
+const visible = ref(true);
+const mobile = ref("");
+const authStore = useAuthStore();
+const modalRef = ref(null);
+const login = async () => {
+	try {
+		const response = await fetch(
+			"https://api.pateh.com/ath/auth/login-or-register",
+			{
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({mobile: mobile.value}),
+			}
+		);
+		const data = await response.json();
+		authStore.setToken(data.token);
+		authStore.setUser(data.user);
+		visible.value = false;
+	} catch (error) {
+		console.error("خطا در ورود:", error);
+	}
+};
+
+const handleClickOutside = (event) => {
+	if (modalRef.value && !modalRef.value.contains(event.target)) {
+		emit("close");
+	}
+};
+
+onMounted(() => {
+	document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+	document.removeEventListener("click", handleClickOutside);
+});
+</script>
