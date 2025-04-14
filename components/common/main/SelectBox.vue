@@ -15,23 +15,23 @@ import {ref, computed, watch, onMounted, onBeforeUnmount} from "vue";
  * @property {function(string): Promise<Option[]>} onSearch - تابع جستجو در API
  */
 
-const props = defineProps({
-	options: {
-		type: Array,
-		required: true,
-	},
-	modelValue: {
-		type: [String, Number],
-		default: null,
-	},
-	placeholder: {
-		type: String,
-		default: "انتخاب کنید",
-	},
-	onSearch: {
-		type: Function,
-		required: true,
-	},
+ const props = defineProps({
+  options: {
+    type: Array,
+    required: true,
+  },
+  modelValue: {
+    type: [String, Number],
+    default: null,
+  },
+  placeholder: {
+    type: String,
+    default: "انتخاب کنید",
+  },
+  onSearch: {
+    type: Function,
+    required: true,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -43,97 +43,110 @@ const isLoading = ref(false);
 const internalOptions = ref([...props.options]);
 const selectBoxRef = ref(null);
 
+// Toggle the dropdown visibility
 const toggleDropdown = () => {
-	isOpen.value = !isOpen.value;
+  isOpen.value = !isOpen.value;
 };
 
+// Filter options based on search term
 const filteredOptions = computed(() => {
-	if (!searchTerm.value) {
-		return internalOptions.value;
-	}
-	return internalOptions.value.filter((option) =>
-		option.label.toLowerCase().includes(searchTerm.value.toLowerCase())
-	);
+  if (!searchTerm.value) {
+    return internalOptions.value;
+  }
+  return internalOptions.value.filter((option) =>
+    option.label.toLowerCase().includes(searchTerm.value.toLowerCase())
+  );
 });
 
+// Handle selection of an option
 const selectOption = (option) => {
-	selectedOption.value = option;
-	emit("update:modelValue", option.label);
-	searchTerm.value = "";
-	isOpen.value = false;
+  selectedOption.value = option;
+  emit("update:modelValue", option.code);
+  searchTerm.value = "";
+  isOpen.value = false;
 };
 
+// Watch for changes in options prop
+watch(() => props.options, (newVal) => {
+  if (newVal) {
+    internalOptions.value = [...newVal];
+  }
+});
+// Watch for changes in modelValue to update selectedOption
 watch(
-	() => props.modelValue,
-	(newVal) => {
-		selectedOption.value =
-			internalOptions.value.find((opt) => opt.label === newVal) || null;
-	},
-	{immediate: true}
+  () => props.modelValue,
+  (newVal) => {
+    selectedOption.value = internalOptions.value.find(
+      (opt) => opt.code === newVal
+    ) || null;
+  },
+  { immediate: true }
 );
 
+// Search when searchTerm changes
 watch(searchTerm, async (newTerm) => {
-	if (!newTerm) {
-		internalOptions.value = [...props.options];
-		return;
-	}
-	isLoading.value = true;
-	try {
-		const results = await props.onSearch(newTerm);
-		internalOptions.value = results;
-	} catch (error) {
-		console.error("خطا در جستجو:", error);
-		internalOptions.value = [];
-	} finally {
-		isLoading.value = false;
-	}
+  if (!newTerm) {
+    internalOptions.value = [...props.options];
+    return;
+  }
+  isLoading.value = true;
+  try {
+    const results = await props.onSearch(newTerm);
+    internalOptions.value = results;
+  } catch (error) {
+    console.error("خطا در جستجو:", error);
+    internalOptions.value = [];
+  } finally {
+    isLoading.value = false;
+  }
 });
 
+// Close dropdown when clicked outside
 const handleClickOutside = (event) => {
-	if (selectBoxRef.value && !selectBoxRef.value.contains(event.target)) {
-		isOpen.value = false;
-	}
+  if (selectBoxRef.value && !selectBoxRef.value.contains(event.target)) {
+    isOpen.value = false;
+  }
 };
 
 onMounted(() => {
-	document.addEventListener("click", handleClickOutside);
+  document.addEventListener("click", handleClickOutside);
 });
 
 onBeforeUnmount(() => {
-	document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 <template>
 	<div class="select-box" ref="selectBoxRef">
-		<div @click="toggleDropdown" class="select-box-header">
-			<span>{{ selectedOption ? selectedOption.label : placeholder }}</span>
-			<span class="arrow text-[#EB6F24]">{{ isOpen ? "▲" : "▼" }}</span>
+	  <div @click="toggleDropdown" class="select-box-header">
+		<span>{{ selectedOption ? selectedOption.label : placeholder }}</span>
+		<span class="arrow text-[#EB6F24]">{{ isOpen ? "▲" : "▼" }}</span>
+	  </div>
+	  <div v-if="isOpen" class="dropdown">
+		<input
+		  type="text"
+		  v-model="searchTerm"
+		  placeholder="جستجو..."
+		  class="search-input mx-auto overflow-hidden w-full"
+		/>
+		<div v-if="isLoading" class="loading">در حال بارگذاری...</div>
+		<div v-else-if="filteredOptions.length === 0" class="no-options">
+		  موردی یافت نشد
 		</div>
-		<div v-if="isOpen" class="dropdown">
-			<input
-				type="text"
-				v-model="searchTerm"
-				placeholder="جستجو..."
-				class="search-input"
-			/>
-			<div v-if="isLoading" class="loading">در حال بارگذاری...</div>
-			<div v-else-if="filteredOptions.length === 0" class="no-options">
-				موردی یافت نشد
-			</div>
-			<div v-else class="options">
-				<div
-					v-for="option in filteredOptions"
-					:key="option.id"
-					class="option"
-					@click="selectOption(option)"
-				>
-					<span class="fa">{{ option.label }}</span>
-					<span class="en">{{ option.label_en }}</span>
-				</div>
-			</div>
+		<div v-else class="options">
+		  <div
+			v-for="option in filteredOptions"
+			:key="option.id"
+			class="option"
+			@click="selectOption(option)"
+		  >
+			<span class="fa">{{ option.label }}</span>
+			<span class="en">{{ option.label_en }}</span>
+		  </div>
 		</div>
+	  </div>
 	</div>
-</template>
+  </template>
 
 <style scoped>
 .select-box {
@@ -162,10 +175,8 @@ onBeforeUnmount(() => {
 }
 
 .search-input {
-	width: 90%;
 	padding: 5px;
 	border: 1px solid #ccc;
-	margin: 5px;
 }
 
 .options {

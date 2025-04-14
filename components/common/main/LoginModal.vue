@@ -5,16 +5,24 @@
 		ref="modalRef"
 	>
 		<div class="bg-white p-6 rounded shadow">
-			<h2 class="text-xl mb-4">ورود</h2>
+			<h2 class="text-xl mb-4 text-center">ورود</h2>
+			<label class="text-sm text-[#474747]">شماره موبایل خود را وارد کنید</label>
 			<input
 				v-model="mobile"
 				type="text"
 				placeholder="شماره موبایل"
-				class="border p-2 w-full mb-4"
+				class="border border-[#474747] rounded p-2 w-full my-4"
 			/>
-			<button @click="login" class="bg-blue-500 text-white px-4 py-2 rounded">
-				ورود
+			<div class="grid grid-cols-2 gap-4">
+				<button class="bg-slate-300 text-white px-4 py-2 rounded">
+		      انصراف          
 			</button>
+			<button @click="login" class="bg-blue-500 text-white px-4 py-2 rounded">
+				<i v-if="loading" class="pi pi-spin pi-spinner ml-1"></i>
+            	<span v-if="!loading">ورود</span>
+            	<span v-else class="text-xs">صبر کنید...</span>
+			</button>
+		</div>
 		</div>
 	</div>
 </template>
@@ -27,7 +35,9 @@ const visible = ref(true);
 const mobile = ref("");
 const authStore = useAuthStore();
 const modalRef = ref(null);
+const loading = ref(false)
 const login = async () => {
+loading.value = true;
 	try {
 		const response = await fetch(
 			"https://api.pateh.com/ath/auth/login-or-register",
@@ -51,6 +61,7 @@ const handleClickOutside = (event) => {
 		emit("close");
 	}
 };
+
 
 onMounted(() => {
 	document.addEventListener("click", handleClickOutside);

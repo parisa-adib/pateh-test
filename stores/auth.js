@@ -1,24 +1,52 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
 
-export const useAuthStore = defineStore("auth", () => {
-	const user = ref(null);
-	const token = ref(null);
-
-	const setUser = (userData) => {
-		user.value = userData;
-	};
-
-	const setToken = (jwt) => {
-		token.value = jwt;
-		localStorage.setItem("token", jwt);
-	};
-
-	const logout = () => {
-		user.value = null;
-		token.value = null;
-		localStorage.removeItem("token");
-	};
-
-	return {user, token, setUser, setToken, logout};
-});
+export const useAuthStore = defineStore('auth', {
+	state: () => ({
+	  token: null,
+	  mobile: null,
+	  user: null,
+	  isRegister: null,
+	}),
+	getters: {
+	  isAuthenticated() {
+		return this.token != null;
+	  },
+	  getMobile() {
+		return this.mobile;
+	  },
+	  getUser() {
+		return this.user;
+	  },
+	  getIsRegister() {
+		return this.isRegister;
+	  },
+	
+	},
+	actions: {
+	  setToken(payload) {
+		this.token = payload;
+	  },
+	  setMobile(payload) {
+		this.mobile = payload;
+	  },
+	  setUser(payload) {
+		this.user = payload;
+	  },
+	  setIsRegister(payload) {
+		this.isRegister = payload;
+	  },
+	
+	  logout() {
+		this.token = null;
+		this.mobile = null;
+		this.user = null;
+		this.isRegister = null;
+		useRouter().push('/');
+	  },
+	},
+	// persist: {
+	//   storage: import.meta.client ? localStorage : undefined,
+	//   pick: ['token', 'mobile', 'user', 'isRegister'],
+	// },
+  });
+  
