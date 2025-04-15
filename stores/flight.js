@@ -5,6 +5,7 @@ export const useFlightStore = defineStore('flight', {
     flights: [],
     loading: false,
     error: null,
+    flightType:null,
   }),
   actions: {
     async searchFlights(params) {
@@ -24,6 +25,13 @@ export const useFlightStore = defineStore('flight', {
       } finally {
         this.loading = false;
       }
+    },
+
+    setFlightType(type) {
+      this.flightType = type;
+    },
+    clearFlights() {
+      this.flights = []; // Clear the flights array
     },
   },
 });

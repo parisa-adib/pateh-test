@@ -165,7 +165,11 @@ onBeforeUnmount(() => {
 	border-radius: 5px;
 	font-size: 13px;
 }
-
+.dark .select-box-header {
+	background: #2d3748;
+	color: #fff;
+	border-color: #4a5568;
+}
 .dropdown {
 	position: absolute;
 	width: 100%;
@@ -174,11 +178,19 @@ onBeforeUnmount(() => {
 	z-index: 10;
 }
 
+.dark .dropdown {
+	background: #2d3748;
+	border-color: #4a5568;
+}
 .search-input {
 	padding: 5px;
 	border: 1px solid #ccc;
 }
-
+.dark .search-input {
+	background: #2d3748;
+	color: #fff;
+	border-color: #4a5568;
+}
 .options {
 	max-height: 150px;
 	overflow-y: auto;
@@ -194,7 +206,10 @@ onBeforeUnmount(() => {
 .option:hover {
 	background-color: #f0f0f0;
 }
-
+.dark .option:hover {
+	background-color: #4a5568;
+	color: #fff;
+}
 .loading,
 .no-options {
 	padding: 10px;

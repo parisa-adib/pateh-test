@@ -33,12 +33,29 @@ body {
 	background-color: #faf8f8;
 	direction: rtl !important;
 }
-
+.dark body {
+	background-color: #1a202c; /* Dark mode background */
+	direction: rtl !important;
+  }
 .vpd-icon-btn {
 	border-radius: 0 5px 5px 0;
 }
+.dark .vpd-icon-btn {
+	background-color: #2d3748; /* Dark mode background for button */
+
+}
 .vpd-input-group input {
 	border-radius: 5px 0 0 5px;
+}
+.dark .vpd-input-group input {
+	background-color: #2d3748; /* Dark mode background for input */
+	border: 1px solid #4a5568; /* Dark mode border color */
+	color: #fff;
+}
+.vpd-controls button{
+display: flex;
+justify-content: center;
+align-items: center;
 }
 .otp-box {
 	direction: ltr !important;
@@ -63,6 +80,10 @@ body {
 	background-color: #f6f5f5;
 	outline: none !important;
 }
+.dark .otp-input {
+	background-color: #2d3748; /* Dark mode background for input */
+	border: 1px solid #4a5568; /* Dark mode border color */
+}
 .otp-input:focus {
 	border: 1px solid var(--primary);
 }
@@ -73,4 +94,8 @@ body {
 .otp-input::-webkit-outer-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
+}
+.Vue-Toastification__container .Vue-Toastification__toast{
+	direction: rtl !important;
+	font-family: "Estedad";
 }

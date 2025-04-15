@@ -2,8 +2,9 @@
 import {computed, ref, watch} from "vue";
 import FlightCard from "./FlightCard.vue";
 import {useFlightStore} from "~/stores/flight";
-const flightStore = useFlightStore();
+import VsIcon from "~/components/global/VsIcon.vue";
 
+const flightStore = useFlightStore();
 const selectedTimeSlot = ref("");
 const selectedCabinType = ref("");
 
@@ -44,16 +45,24 @@ const filteredFlights = computed(() => {
 		return true;
 	});
 });
+
+const removefilters = () => {
+	selectedTimeSlot.value = "";
+	selectedCabinType.value = "";
+};
 </script>
 
 <template>
-	<div class="mt-6 p-4">
-		<!--Filter controls-->
-		<div class="flex items-center space-x-2">
-			<label class="text-sm text-gray-700">زمان پرواز:</label>
+	<div class="mt-2 p-4">
+		<!-- Filter controls-->
+	<div class="grid grid-cols-5 gap-2 mb-5">
+		<div class="col-span-2 flex flex-col items-start justify-center">
+			
+			<label class="text-sm text-gray-700 dark:text-gray-200 mb-1">زمان پرواز</label>
 			<select
 				v-model="selectedTimeSlot"
-				class="border rounded px-2 py-1 text-sm"
+				class="border border-[#ccc] rounded p-[2px] text-sm w-full dark:bg-gray-700 dark:text-white dark:border-gray-700"
+		
 			>
 				<option value="midnight">بامداد (00:00 - 04:59)</option>
 				<option value="morning">صبح (05:00 - 11:59)</option>
@@ -63,17 +72,31 @@ const filteredFlights = computed(() => {
 		</div>
 
 		<!-- Cabin type filter -->
-		<div class="flex items-center space-x-2">
-			<label class="text-sm text-gray-700">کلاس پرواز:</label>
+		<div class="col-span-2 flex flex-col items-start justify-center">
+			<label class="text-sm text-gray-700 mb-1 dark:text-gray-200">کلاس پرواز</label>
 			<select
 				v-model="selectedCabinType"
-				class="border rounded px-2 py-1 text-sm"
+				class="border border-[#ccc] rounded p-[2px] text-sm w-full dark:bg-gray-700 dark:text-white dark:border-gray-700"
 			>
-				<option value="ECONOMY">اکونومی</option>
-				<option value="BUSINESS">بیزینس</option>
+				<option value="ECONOMY">ECONOMY</option>
+				<option value="BUSINESS">BUSINESS</option>
 			</select>
 		</div>
-
+		<div class="col-span-1 flex items-end justify-center">
+			<button
+			class="p-2 !rounded-md flex justify-center items-center bg-[#EB6F24] text-white"
+			@click="removefilters"
+		>
+		<VsIcon
+     iconName="Trash"
+      type="bold"
+       color="#fff"
+       size="15"
+     />
+			<span class="mt-1 text-xs mr-1">حذف </span>
+		</button>
+		</div>
+	</div>
 		<!-- Flights list -->
 		<div v-if="filteredFlights.length > 0" class="space-y-4">
 			<div

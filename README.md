@@ -1,10 +1,27 @@
-# Nuxt Minimal Starter
+# Pateh Test Project
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This project is a Nuxt.js application that includes reusable components for searching flights, displaying and filtering information, and is styled using Tailwind CSS.
+
+## Features
+
+- **Reusable Components**: Includes components like `SelectBox` for dropdown selection with search functionality.
+- **Tailwind CSS**: Pre-configured for styling.
+- **Nuxt.js Framework**: Leverages the power of Nuxt.js for server-side rendering and modular development.
+- **Composable Utilities**: Includes utilities like `useConvertDate` for date conversion.
+- **Plugins**: Custom plugins like `priceFormatter` for formatting prices.
+
+## Project Structure
+
+- **components/**: Contains reusable Vue components.
+- **composable/**: Includes reusable composable functions.
+- **pages/**: Nuxt.js pages for routing.
+- **plugins/**: Custom Vue plugins.
+- **assets/**: Static assets like CSS and fonts.
+- **public/**: Publicly accessible files like `favicon.ico` and `robots.txt`.
 
 ## Setup
 
-Make sure to install dependencies:
+Install dependencies using your preferred package manager:
 
 ```bash
 # npm
@@ -16,60 +33,4 @@ pnpm install
 # yarn
 yarn install
 
-# bun
-bun install
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event);
 	const {mobile} = body;
@@ -9,6 +10,7 @@ export default defineEventHandler(async (event) => {
 			"https://api.pateh.com/ath/auth/login-or-register",
 			{mobile}
 		);
+	
 		return response.data;
 	} catch (error) {
 		throw createError({

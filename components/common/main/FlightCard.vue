@@ -9,11 +9,8 @@ const convertToJalali = (date) => {
 const props = defineProps({flight: {type: Object, required: true}});
 </script>
 <template>
-	<div class="rounded-md bg-white px-5 py-3 shadow-sm mx-auto w-full">
-		<div class="pt-2">
-			<span class="text-sm text-[#191919]">پرواز رفت</span>
-		</div>
-		<div
+	<div class="rounded-md bg-white dark:bg-gray-700 px-5 py-3 shadow-sm mx-auto w-full">
+			<div
 			class="badge-container flex justify-start gap-3 my-3"
 			v-if="props.flight.badges"
 		>
@@ -37,15 +34,15 @@ const props = defineProps({flight: {type: Object, required: true}});
 						alt="airline"
 						class="rounded-full w-[70%]"
 					/>
-					<span class="text-sm text-[#191919] mt-2">{{
+					<span class="text-sm text-[#191919] dark:text-white mt-2">{{
 						item.airline_info.name_fa
 					}}</span>
 				</div>
 				<div class="flex flex-col items-center justify-center text-center">
-					<span class="text-sm text-[#191919] mt-2">{{
+					<span class="text-sm text-[#191919] dark:text-white mt-2">{{
 						convertToJalali(item.flight_datetime)
 					}}</span>
-					<span class="text-sm text-[#191919] mt-2">{{
+					<span class="text-sm text-[#191919] dark:text-white mt-2">{{
 						item.origin_airport.city_name_fa
 					}}</span>
 				</div>
@@ -53,10 +50,10 @@ const props = defineProps({flight: {type: Object, required: true}});
 					<Icon icon="mdi:arrow-left" class="text-blue-500" />
 				</div>
 				<div class="flex flex-col items-center justify-center">
-					<span class="text-sm text-[#191919] mt-2 text-center">{{
+					<span class="text-sm text-[#191919] dark:text-white mt-2 text-center">{{
 						convertToJalali(item.arrival_datetime)
 					}}</span>
-					<span class="text-sm text-[#191919] mt-2">{{
+					<span class="text-sm text-[#191919] dark:text-white mt-2">{{
 						item.destination_airport.city_name_fa
 					}}</span>
 				</div>
@@ -67,8 +64,8 @@ const props = defineProps({flight: {type: Object, required: true}});
 						? item.available_seat_quantity + " صندلی باقیمانده "
 						: "تکمیل ظرفیت"
 				}}</span>
-				<span class="text-left text-xs">{{
-					"قیمت: " + $formatNumber(props.flight.finance.adult.fare)
+				<span class="text-left text-xs dark:text-white">{{
+					"قیمت: " + $formatNumber(props.flight.finance.adult.fare) + " ریال "
 				}}</span>
 			</div>
 		</div>
